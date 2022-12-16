@@ -1,0 +1,18 @@
+class Reservation < ApplicationRecord
+  belongs_to :listing
+
+  after_create_commit create_checkout_checkin_mission
+
+  private
+
+  def create_checkout_checkin_mission
+    return if listing.missions.find_by(mission_type: 1, date: end_date)
+
+    lisitng.missions.create!(
+      listing_id: listing.id,
+      mission_type: 2,
+      date: start_date,
+      price: 10 * listing.num_rooms
+    )
+  end
+end
